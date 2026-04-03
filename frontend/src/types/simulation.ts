@@ -1,3 +1,9 @@
+export interface WeeklyData {
+  week: string;
+  baseline: number;
+  scenario: number;
+}
+
 export interface WeeklyResult {
   weekly_revenue: number[]; // Always length 13
   total_revenue: number;

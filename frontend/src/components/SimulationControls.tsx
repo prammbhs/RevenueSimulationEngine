@@ -1,12 +1,10 @@
 import React, { useCallback } from 'react';
-import { formatSliderLabel } from '../utils/format';
 import type { SimulationPayload } from '../types/simulation';
 
-/* ── Types ──────────────────────────────────────────────── */
 export interface ControlValues {
-  conversion: number; // -50 … +50  → API: /100
-  dealSize:   number; // -50 … +100 → API: /100
-  cycle:      number; // -20 … +20  → API: as-is
+  conversion: number; 
+  dealSize:   number; 
+  cycle:      number; 
 }
 
 interface Props {
@@ -17,9 +15,6 @@ interface Props {
   loading:  boolean;
 }
 
-const DEFAULT: ControlValues = { conversion: 0, dealSize: 0, cycle: 0 };
-
-/* ── Slider track fill ──────────────────────────────────── */
 function sliderStyle(value: number, min: number, max: number): React.CSSProperties {
   const pct = ((value - min) / (max - min)) * 100;
   return {
@@ -27,24 +22,16 @@ function sliderStyle(value: number, min: number, max: number): React.CSSProperti
   };
 }
 
-/* ── Control row ────────────────────────────────────────── */
 interface RowProps {
   label:  string;
   value:  number;
   min:    number;
   max:    number;
   unit:   string;
-  hint:   string;
   onChange: (v: number) => void;
 }
 
-function ControlRow({ label, value, min, max, unit, hint, onChange }: RowProps) {
-  const badge = formatSliderLabel(value, unit);
-  const color =
-    value > 0 ? 'text-indigo-600 dark:text-indigo-400' :
-    value < 0 ? 'text-rose-500 dark:text-rose-400' :
-                'text-slate-400 dark:text-slate-500';
-
+function ControlRow({ label, value, min, max, unit, onChange }: RowProps) {
   const clamp = useCallback((n: number) => Math.min(max, Math.max(min, n)), [min, max]);
 
   const handleText = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,89 +40,77 @@ function ControlRow({ label, value, min, max, unit, hint, onChange }: RowProps) 
   };
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-2.5">
       <div className="flex items-center justify-between">
-        <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{label}</span>
-        <span className={`text-sm font-semibold tabular-nums ${color}`}>{badge}</span>
+        <span className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-tight">{label}</span>
+        <span className="text-[11px] font-bold text-indigo-500 uppercase">
+          {value > 0 ? '+' : ''}{value}{unit}
+        </span>
       </div>
 
-      <input
-        type="range"
-        min={min}
-        max={max}
-        value={value}
-        step={1}
-        style={sliderStyle(value, min, max)}
-        onChange={(e) => onChange(Number(e.target.value))}
-      />
-
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-3">
+        <div className="flex-1">
+          <input
+            type="range"
+            min={min}
+            max={max}
+            value={value}
+            step={1}
+            style={sliderStyle(value, min, max)}
+            onChange={(e) => onChange(Number(e.target.value))}
+            className="w-full h-1.5 rounded-full appearance-none cursor-pointer"
+          />
+        </div>
         <input
           type="number"
           min={min}
           max={max}
           value={value}
           onChange={handleText}
-          className="w-20 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 px-2.5 py-1.5 text-sm font-medium text-slate-800 dark:text-slate-200 focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900 transition-all"
+          className="w-14 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-2 py-1.5 text-xs font-bold text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-indigo-500/20 outline-none transition-all text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
         />
-        <span className="text-xs text-slate-400 dark:text-slate-500">{hint}</span>
       </div>
     </div>
   );
 }
 
-/* ── Main component ─────────────────────────────────────── */
 export default function SimulationControls({ values, onChange, onRun, onReset, loading }: Props) {
-  const isDirty =
-    values.conversion !== DEFAULT.conversion ||
-    values.dealSize   !== DEFAULT.dealSize   ||
-    values.cycle      !== DEFAULT.cycle;
+  const isDirty = values.conversion !== 23 || values.dealSize !== 0 || values.cycle !== 0;
 
   return (
-    <div className="bg-white dark:bg-[#1a1d27] rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700/50 p-5 space-y-5">
-      {/* Header */}
-      <p className="text-[10px] font-semibold tracking-widest text-slate-400 dark:text-slate-500 uppercase">
+    <div className="bg-white dark:bg-[#1a1d27] rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700/50 p-6 space-y-6 animate-fade-in">
+      <p className="text-[11px] font-bold tracking-widest text-slate-400 dark:text-slate-500 uppercase">
         Simulation Controls
       </p>
 
-      {/* Sliders */}
-      <div className="space-y-5">
+      <div className="space-y-6">
         <ControlRow
           label="Conversion Rate"
           value={values.conversion} min={-50} max={50}
-          unit="%" hint="% Change"
-          onChange={(v) => onChange({ ...values, conversion: v })}
+          unit="%" onChange={(v) => onChange({ ...values, conversion: v })}
         />
-        <div className="border-t border-slate-100 dark:border-slate-700/50" />
         <ControlRow
           label="Avg. Deal Size"
           value={values.dealSize} min={-50} max={100}
-          unit="%" hint="% Change"
-          onChange={(v) => onChange({ ...values, dealSize: v })}
+          unit="%" onChange={(v) => onChange({ ...values, dealSize: v })}
         />
-        <div className="border-t border-slate-100 dark:border-slate-700/50" />
         <ControlRow
           label="Sales Cycle"
           value={values.cycle} min={-20} max={20}
-          unit=" days" hint="Days Shift"
-          onChange={(v) => onChange({ ...values, cycle: v })}
+          unit=" days" onChange={(v) => onChange({ ...values, cycle: v })}
         />
       </div>
 
-      {/* Actions */}
-      <div className="flex gap-2 pt-1">
-        {/* Reset */}
-        <button
-          onClick={onReset}
-          disabled={!isDirty || loading}
-          title="Reset to baseline"
-          className="flex items-center justify-center gap-1.5 rounded-xl border border-slate-200 dark:border-slate-700 px-4 py-2.5 text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 active:scale-[0.97] transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
-        >
-          <svg className="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor">
-            <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd" />
-          </svg>
-          Reset
-        </button>
+      <div className="space-y-3 pt-2">
+        <div className="flex gap-2">
+          <button
+            onClick={onReset}
+            disabled={!isDirty || loading}
+            className="flex-1 py-3 px-4 rounded-xl border border-rose-200/50 dark:border-rose-900/30 text-xs font-black text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-all disabled:opacity-30 disabled:border-slate-200 dark:disabled:border-slate-800 disabled:text-slate-400 outline-none uppercase tracking-widest"
+          >
+            RESET TO DEFAULT (+23%)
+          </button>
+        </div>
 
         {/* Run Simulation */}
         <button
@@ -145,16 +120,10 @@ export default function SimulationControls({ values, onChange, onRun, onReset, l
             cycleChange:      values.cycle,
           })}
           disabled={loading}
-          className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-indigo-600 py-2.5 text-sm font-semibold text-white shadow-md shadow-indigo-200 dark:shadow-indigo-900 hover:bg-indigo-700 active:scale-[0.97] transition-all disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
+          className="w-full flex items-center justify-center gap-2 rounded-xl bg-indigo-600 py-3.5 text-sm font-bold text-white shadow-xl shadow-indigo-500/20 hover:bg-indigo-700 active:scale-[0.98] transition-all disabled:opacity-60 cursor-pointer outline-none"
         >
           {loading ? (
-            <>
-              <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
-              </svg>
-              Running…
-            </>
+             <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
           ) : (
             <>
               <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
