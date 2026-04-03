@@ -1,5 +1,6 @@
 import app from './app';
 import { loadCSV } from './services/dbLoaderService';
+import { calculateAndStoreBaselines } from './services/baselineMetricsService';
 
 const PORT = process.env.PORT || 8000;
 
@@ -9,7 +10,8 @@ async function startServer() {
     console.log('Loading CSV data into database...');
     await loadCSV();
 
-    // TODO: 2. Calculate "Cohort Baseline" logic here.
+    console.log('Calculating cohort baseline metrics...');
+    calculateAndStoreBaselines();
 
     app.listen(PORT, () => {
       console.log(`Server is running at http://localhost:${PORT}`);

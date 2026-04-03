@@ -1,13 +1,9 @@
 import fs from 'fs';
 import path from 'path';
 import csv from 'csv-parser';
-import Database from 'better-sqlite3';
+import db from '../utils/db';
 
-const dbPath = path.join(__dirname, '../data/sqlite.db');
 const csvPath = path.join(__dirname, '../data/deals.csv');
-
-// Initialize the database
-const db = new Database(dbPath);
 
 export interface DealRecord {
   deal_id: string;
@@ -21,7 +17,6 @@ export interface DealRecord {
   price_category: string;
 }
 
-//Ensures the deals table exists in the database.
 const initializeSchema = () => {
   db.exec(`
     CREATE TABLE IF NOT EXISTS deals (
