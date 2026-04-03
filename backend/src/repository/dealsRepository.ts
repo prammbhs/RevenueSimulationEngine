@@ -1,6 +1,6 @@
 import Database from 'better-sqlite3';
 import path from 'path';
-import { DealRecord } from '../services/dbLoaderService';
+import { DealRecord } from '../types';
 
 const dbPath = path.join(__dirname, '../data/sqlite.db');
 const db = new Database(dbPath);

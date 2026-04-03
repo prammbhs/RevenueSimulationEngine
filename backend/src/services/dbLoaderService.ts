@@ -4,18 +4,9 @@ import csv from 'csv-parser';
 import db from '../utils/db';
 
 const csvPath = path.join(__dirname, '../data/deals.csv');
+import { DealRecord } from '../types';
 
-export interface DealRecord {
-  deal_id: string;
-  created_date: string;
-  closed_date: string | null;
-  stage: string;
-  deal_value: number;
-  region: string;
-  source: string;
-  quarter: string;
-  price_category: string;
-}
+
 
 const initializeSchema = () => {
   db.exec(`
@@ -62,7 +53,7 @@ export const loadCSV = (): Promise<void> => {
 
           // Price Categorization
           const dealValue = parseInt(data.deal_value, 10);
-          let priceCategory = 'Unknown';
+          let priceCategory: 'small' | 'medium' | 'large';
           if (dealValue < 10000) {
             priceCategory = 'small';
           } else if (dealValue <= 30000) {

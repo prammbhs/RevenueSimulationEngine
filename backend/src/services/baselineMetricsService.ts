@@ -4,20 +4,9 @@ import {
   getSourceMetrics,
   getPriceCategoryMetrics,
 } from '../repository/metricsRepository';
+import { SalesMetrics } from '../types';
 
-type SalesMetrics = {
-  coreMetrics: {
-    conversionRate: number;
-    avgDealSize: number;
-    salesCycle: number;
-  };
-  advancedFactors: {
-    regionFactor: Record<string, number>;
-    sourceFactor: Record<string, number>;
-    priceFactor: Record<string, number>;
-    salesCycleByCategory: Record<string, number>;
-  };
-};
+
 
 export let salesMetrics: SalesMetrics | null = null;
 
