@@ -9,24 +9,34 @@ Interactive modeling for sales growth projections through deal-level behavioral 
 ## Demo Video
 ## Quickstart
 
-### Option 1: Standard NPM Setup (Simplest)
+### Option 1: Run using NPM Setup
 ```bash
 # Clone the repository
 git clone https://github.com/prammbhs/RevenueSimulationEngine.git
 cd RevenueSimulationEngine
+```
+Backend:
 
-# Set up Backend
-cd backend && npm install && npm run dev &
-# Set up Frontend
-# start a new terminal tab
-cd RevenueSimulationEngine/frontend && npm install && npm run dev
+```bash
+cd backend
+npm install
+npm run dev
 ```
 
- Access at: **[http://localhost:5173](http://localhost:5173)**
+Open a new terminal:
 
----
+Frontend:
 
-### Option 2: Docker Setup
+```bash
+cd ../RevenueSimulationEngine/frontend
+npm install
+npm run dev
+```
+
+Frontend: [http://localhost:5173](http://localhost:5173)
+Backend: [http://localhost:5000](http://localhost:5000)
+
+### Option 2: Run using Docker Setup
 ```bash
 git clone https://github.com/prammbhs/RevenueSimulationEngine.git
 cd RevenueSimulationEngine
@@ -38,21 +48,25 @@ Access at: **[http://localhost:5173](http://localhost:5173)**
 
 ## Problem Statement
 
-Traditional sales dashboards are inherently retrospective. While they excel at reporting historical performance (actuals), they lack the predictive flexibility required for strategic planning. Sales leaders often ask "What-If" questions:
-- *What if our conversion rate increases by 15% due to a new training program?*
-- *What if the sales cycle lengthens by 5 days because of new compliance requirements?*
+Traditional sales dashboards are retrospective and limited to reporting historical performance. They do not provide the ability to simulate future outcomes under changing conditions.
 
-Static reports cannot answer these questions. RevSim bridges this gap by providing a sandbox environment where users can simulate future outcomes based on historical behavioral patterns.
+Sales leaders often need to answer questions such as:
 
+* What happens if conversion improves?
+* What is the impact of changing deal sizes?
+* How does sales cycle duration affect revenue timing?
+
+RevSim addresses this gap by enabling forward-looking simulation based on historical patterns.
 
 ## Solution Overview
 
-RevSim is a full-stack simulation engine that transforms historical sales data into a forward-looking projection tool. It allows users to:
-- **Establish Baselines**: Automatically compute historical performance metrics from Q1 and Q2 data.
-- **Model Scenarios**: Use interactive controls to adjust conversion rates, deal sizes, and cycle durations.
-- **Project Outcomes**: Generate weekly revenue forecasts for Q3.
-- **Visualize Impact**: Compare the baseline projection against the simulated scenario in a high-fidelity chart.
-- **Derive Insights**: Understand the primary drivers behind revenue shifts through automated variance analysis.
+RevSim transforms historical sales data into a simulation engine that allows users to:
+
+* Compute baseline performance using Q1 and Q2 data
+* Adjust key drivers such as conversion rate, deal size, and cycle duration
+* Simulate Q3 revenue outcomes
+* Compare baseline vs scenario results
+* Understand the drivers behind revenue changes
 
 ## Key Features
 
@@ -65,42 +79,77 @@ RevSim is a full-stack simulation engine that transforms historical sales data i
 ## Approach & Methodology
 
 ### Core Metric Calculation
-The system analyzes historical deals to establish:
-- **Conversion Rate**: Percentage of deals traditionally won.
-- **Average Deal Size**: Mean value of closed-won opportunities.
-- **Sales Cycle**: Mean duration from creation to closing.
+Baseline metrics are computed from Q1 and Q2:
+
+* Conversion Rate = Closed Won / (Closed Won + Closed Lost)
+* Average Deal Size = Average(deal_value for Closed Won)
+* Sales Cycle = Average(closed_date - created_date)
+
+---
 
 ### Deal-Level Simulation
-Unlike aggregate models that apply multipliers to total revenue, RevSim operates at the **individual deal level**:
-- **Probability Determination**: A unique probability is calculated for every deal in the pipeline:
-  `Probability = Base Conversion × Region Factor × Source Factor × Price Factor`
-- **Expected Revenue**:
-  `Expected Revenue = Calculated Probability × Adjusted Deal Value`
 
+The model operates at the individual deal level instead of using aggregate formulas.
+
+For each deal:
+
+* Probability is computed as:
+
+  Probability = Base Conversion × Region Factor × Source Factor × Price Factor
+
+* Expected Revenue:
+
+  Expected Revenue = Probability × Deal Value
+
+This approach ensures heterogeneity across deals and avoids inaccuracies of aggregate models.
+
+---
 ### Scenario Adjustments
-User inputs scale the underlying model:
-- **Conversion Scaling**: Adjusts the global base probability.
-- **Deal Size Scaling**: Multiplies the value of every deal in the simulation.
-- **Cycle Adjustment**: Shifts the expected close date of each deal, affecting weekly aggregation.
+User inputs are applied per deal:
+* Conversion Change:
 
+  Adjusts probability multiplicatively:
+
+  New Probability = Base Probability × (1 + conversionChange)
+
+* Deal Size Change:
+
+  Adjusts value per deal:
+
+  New Value = deal_value × (1 + dealSizeChange)
+
+* Cycle Change:
+
+  Adjusts expected close timing:
+
+  New Cycle = Base Cycle + cycleChange
+
+---
 ### Weekly Aggregation Logic
-Deals are bucketed into discrete weekly intervals based on their `Expected Close Date`. This transforms static deal values into a temporal revenue stream.
+
+* Expected close date is calculated per deal
+* Revenue is grouped into weekly buckets (Week 1–13 of Q3)
+* Produces time-based revenue projection
+
+---
 
 ## Example Calculation
 
-Consider a single deal in the pipeline:
-- **Deal Value**: 1,00,000
-- **Base Conversion**: 20%
-- **Regional Factor**: 1.1 (High performance)
-- **Calculated Probability**: 22%
-- **Expected Revenue**: 22,000
+For a single deal:
 
-**User Scenario: +10% Conversion Increase**
-- **New Base Conversion**: 22%
-- **New Probability**: 24.2%
-- **New Expected Revenue**: 24,200
-- **Net Gain**: +2,200 for this single opportunity.
+* Deal Value = 100,000
+* Base Conversion = 20%
+* Factors (combined) = 1.1
 
+Base Probability = 0.22
+Expected Revenue = 22,000
+
+With +10% conversion:
+
+* New Probability = 0.242
+* New Expected Revenue = 24,200
+
+---
 ## Insights Generation
 
 The engine automatically generates business-centric insights by comparing the two models:
@@ -120,16 +169,33 @@ The engine automatically generates business-centric insights by comparing the tw
 
 The backend exposes a optimized single endpoint:
 - **POST `/api/v1/simulate`**
-- **Payload**: `conversionChange`, `dealSizeChange`, `cycleChange`.
+- **Payload**: 
+```json
+{
+  "conversionChange": number,
+  "dealSizeChange": number,
+  "cycleChange": number
+}
+```
 
-**Design Rationale**: A single comprehensive endpoint was chosen over multiple GET requests to ensure atomicity. By sending all parameters at once, the engine can perform a unified calculation pass, reducing network overhead and ensuring the frontend receives a consistent, pre-computed comparison object (Baseline + Scenario).
 
-## Project Structure
-
-```text
-/revsim
-├── /backend     # Express + TypeScript, SQLite database
-└── /frontend    # React + Vite, Recharts, TailwindCSS
+### Sample Output
+```json
+{
+  "baseline": {
+    "weekly_revenue": [0,0,0,116980.26,148393.31,111048.04,167296.84,108208.43,74907.05,135881.44,145541.8,179732.72,250784.24],
+    "total_revenue": 1438774.13
+  },
+  "scenario": {
+    "weekly_revenue": [0,0,0,143885.72,182523.78,136589.09,205775.11,133096.37,92135.67,167134.17,179016.41,221071.24,308464.61],
+    "total_revenue": 1769692.17
+  },
+  "impact": {
+    "absolute": 330918.04,
+    "percentage": 23
+  },
+  "drivers": ["A 23.0% increase in conversion rate positively impacted probability."]
+}
 ```
 
 ## Assumptions
