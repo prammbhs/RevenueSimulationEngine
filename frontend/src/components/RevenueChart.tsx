@@ -1,6 +1,6 @@
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
 import type { WeeklyData } from '../types/simulation';
-import { formatUSD, formatYAxisTick } from '../utils/format';
+import { formatINR, formatYAxisTick } from '../utils/format';
 
 interface Props {
   data: WeeklyData[];
@@ -80,7 +80,7 @@ export default function RevenueChart({ data, loading }: Props) {
               itemStyle={{ fontSize: '12px', fontWeight: 'bold' }}
               formatter={(value: any) => {
                 const num = typeof value === 'number' ? value : 0;
-                return [formatUSD(num), ''];
+                return [formatINR(num), ''];
               }}
             />
             

@@ -1,5 +1,5 @@
 import type { SimulationResponse } from '../types/simulation';
-import { formatUSD, buildSummary } from '../utils/format';
+import { formatINR, buildSummary } from '../utils/format';
 
 interface Props {
   data: SimulationResponse | null;
@@ -29,7 +29,6 @@ function KpiCard({ label, value, sub, large, color, icon }: {
 
 export default function ImpactSummary({ data }: Props) {
   const isPositive   = (data?.impact.absolute ?? 0) >= 0;
-  const scenColor    = '#10b981'; // Neon green for projection as per screenshot
   const diffColor    = isPositive ? '#10b981' : '#f43f5e';
   
   const summary = data
@@ -65,18 +64,28 @@ export default function ImpactSummary({ data }: Props) {
       <div className="flex flex-col md:flex-row gap-4 overflow-x-auto pb-1 no-scrollbar">
         <KpiCard 
           label="Baseline Revenue" 
-          value={formatUSD(data.baseline.total_revenue)} 
+          value={formatINR(data.baseline.total_revenue)} 
         />
         <KpiCard 
           label="Scenario Projection" 
-          value={formatUSD(data.scenario.total_revenue)} 
-          color={scenColor}
+          value={formatINR(data.scenario.total_revenue)} 
+          color={diffColor}
           large
+          icon={
+            <svg className={`w-6 h-6 transition-transform duration-500 ${isPositive ? 'rotate-0' : 'rotate-180'}`} viewBox="0 0 20 20" fill="currentColor" style={{ color: diffColor }}>
+              <path fillRule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clipRule="evenodd" />
+            </svg>
+          }
         />
         <KpiCard 
           label="Absolute Shift" 
-          value={`${isPositive ? '+' : ''}${formatUSD(data.impact.absolute)}`} 
+          value={`${isPositive ? '+' : ''}${formatINR(data.impact.absolute)}`} 
           color={diffColor}
+          icon={
+            <svg className={`w-5 h-5 ${isPositive ? 'rotate-0' : 'rotate-180'}`} viewBox="0 0 20 20" fill="currentColor" style={{ color: diffColor }}>
+              <path fillRule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clipRule="evenodd" />
+            </svg>
+          }
         />
         <KpiCard 
           label="Performance Impact" 
@@ -84,7 +93,7 @@ export default function ImpactSummary({ data }: Props) {
           color={diffColor}
           icon={
             <svg className={`w-5 h-5 ${isPositive ? 'rotate-0' : 'rotate-180'}`} viewBox="0 0 20 20" fill="currentColor" style={{ color: diffColor }}>
-              <path fillRule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clipRule="evenodd" />
+              <path fillRule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clipRule="evenodd" />
             </svg>
           }
         />

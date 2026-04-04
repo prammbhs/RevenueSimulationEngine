@@ -1,4 +1,4 @@
-import { formatUSD } from '../../utils/format';
+import { formatINR } from '../../utils/format';
 
 interface Props {
   totalCount: number;
@@ -34,13 +34,13 @@ export default function DealsHeader({ totalCount, totalValue, wonValue, loading 
         <div className="flex-1 sm:flex-initial min-w-[80px] rounded-xl bg-white dark:bg-[#1a1d27] border border-slate-200 dark:border-slate-700/50 px-4 py-2.5 text-center shadow-sm transition-all hover:border-indigo-200 dark:hover:border-indigo-900/50">
           <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-0.5">Pipeline</p>
           <p className="text-base font-bold text-slate-900 dark:text-slate-100">
-            {formatUSD(totalValue)}
+            {formatINR(totalValue)}
           </p>
         </div>
         <div className="flex-1 sm:flex-initial min-w-[80px] rounded-xl bg-white dark:bg-[#1a1d27] border border-slate-200 dark:border-slate-700/50 px-4 py-2.5 text-center shadow-sm transition-all hover:border-indigo-200 dark:hover:border-indigo-900/50">
           <p className="text-[10px] font-bold text-emerald-500 uppercase tracking-widest mb-0.5">Won</p>
           <p className="text-base font-bold text-emerald-600 dark:text-emerald-400">
-            {formatUSD(wonValue)}
+            {formatINR(wonValue)}
           </p>
         </div>
       </div>

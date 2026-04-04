@@ -1,4 +1,4 @@
-import { formatUSD_K } from '../../utils/format';
+import { formatINR_K } from '../../utils/format';
 import type { DealRecord } from '../../types/deals';
 
 interface Props {
@@ -116,7 +116,7 @@ export default function DealsTable({ deals, loading, error, sort, onSort }: Prop
                       <StageBadge stage={deal.stage} />
                     </td>
                     <td className="px-4 py-3.5 tabular-nums font-bold text-slate-900 dark:text-slate-100 text-sm">
-                      {formatUSD_K(deal.deal_value)}
+                      {formatINR_K(deal.deal_value)}
                     </td>
                     <td className="px-4 py-3.5 text-xs font-medium text-slate-600 dark:text-slate-400">
                       {deal.region}
