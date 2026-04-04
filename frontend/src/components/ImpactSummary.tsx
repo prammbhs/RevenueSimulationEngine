@@ -73,7 +73,7 @@ export default function ImpactSummary({ data }: Props) {
           large
           icon={
             <svg className={`w-6 h-6 transition-transform duration-500 ${isPositive ? 'rotate-0' : 'rotate-180'}`} viewBox="0 0 20 20" fill="currentColor" style={{ color: diffColor }}>
-              <path fillRule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clipRule="evenodd" />
+              <path d="M10 5l-7 11h14L10 5z" />
             </svg>
           }
         />
@@ -83,7 +83,7 @@ export default function ImpactSummary({ data }: Props) {
           color={diffColor}
           icon={
             <svg className={`w-5 h-5 ${isPositive ? 'rotate-0' : 'rotate-180'}`} viewBox="0 0 20 20" fill="currentColor" style={{ color: diffColor }}>
-              <path fillRule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clipRule="evenodd" />
+              <path d="M10 5l-7 11h14L10 5z" />
             </svg>
           }
         />
@@ -93,7 +93,7 @@ export default function ImpactSummary({ data }: Props) {
           color={diffColor}
           icon={
             <svg className={`w-5 h-5 ${isPositive ? 'rotate-0' : 'rotate-180'}`} viewBox="0 0 20 20" fill="currentColor" style={{ color: diffColor }}>
-              <path fillRule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clipRule="evenodd" />
+              <path d="M10 5l-7 11h14L10 5z" />
             </svg>
           }
         />
