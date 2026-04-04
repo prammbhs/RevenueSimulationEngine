@@ -3,10 +3,15 @@
 Interactive modeling for sales growth projections through deal-level behavioral simulation.
 
 ## Screenshots
+<img width="2880" height="1800" alt="Screenshot 2026-04-04 234730" src="https://github.com/user-attachments/assets/892e8a7c-e970-4c7d-b0e2-1ca9081ccce8" />
+<img width="2880" height="1800" alt="Screenshot 2026-04-04 234753" src="https://github.com/user-attachments/assets/4574d867-02ce-40cb-808c-8a33a60398dd" />
+<img width="2880" height="1800" alt="Screenshot 2026-04-04 234805" src="https://github.com/user-attachments/assets/9f587660-9ac3-4db2-b7e9-ceeb1f09766a" />
+<img width="2880" height="1800" alt="Screenshot 2026-04-04 234847" src="https://github.com/user-attachments/assets/79b75936-d526-42bc-a87a-da05782f1260" />
 
-*Caption: Main simulation interface with active revenue projection.*
 
 ## Demo Video
+https://github.com/user-attachments/assets/7324c412-5e92-4157-9144-f0c5d521afd9
+
 ## Quickstart
 
 ### Option 1: Run using NPM Setup
