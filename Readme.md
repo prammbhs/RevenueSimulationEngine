@@ -86,11 +86,24 @@ RevSim transforms historical sales data into a simulation engine that allows use
 ## Approach & Methodology
 
 ### Core Metric Calculation
-Baseline metrics are computed from Q1 and Q2:
+Baseline metrics are computed from `historicalDeals` (specifically Q1 and Q2):
 
-* Conversion Rate = Closed Won / (Closed Won + Closed Lost)
-* Average Deal Size = Average(deal_value for Closed Won)
-* Sales Cycle = Average(closed_date - created_date)
+* **Base Conversion**: `Total Won / (Total Won + Total Lost)`
+* **Average Deal Size**: `Average(deal_value)` for Closed Won deals.
+* **Global Sales Cycle**: `Average(closed_date - created_date)` for all historical deals.
+
+---
+
+### Advanced Factor Calculation
+
+To ensure the simulation reflects real-world variability, we calculate specific multipliers (factors) and segment-based metrics:
+
+1. **Factor Dictionaries**: We create objects to store multipliers that adjust the base conversion probability based on deal attributes:
+    * `regionFactors`: For each region (US, EU, APAC), we calculate its specific conversion rate and divide by the **Base Conversion**.
+    * `sourceFactors`: Calculated similarly for each lead source (Inbound, Outbound, Partner).
+    * `priceFactors`: Calculated similarly for price categories (Small, Medium, Large).
+
+2. **Sales Cycle by Price**: We filter `historicalDeals` to deals in Q1 and Q2 and calculate the average days between `created_date` and `closed_date`, grouped by `priceCategory`. This allows the simulation to reflect that larger deals typically take longer to close.
 
 ---
 
@@ -110,6 +123,7 @@ For each deal:
 
 This approach ensures heterogeneity across deals and avoids inaccuracies of aggregate models.
 
+* Expected Closing date = start date + sales cycle of same price category
 ---
 ### Scenario Adjustments
 User inputs are applied per deal:
