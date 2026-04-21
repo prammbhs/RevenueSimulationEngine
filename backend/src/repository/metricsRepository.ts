@@ -7,7 +7,7 @@ export const getBaseMetrics = () => {
       AVG(CASE WHEN stage = 'Closed Won' THEN deal_value ELSE NULL END) as avgDealSize,
       AVG(
         CASE 
-          WHEN closed_date IS NOT NULL 
+          WHEN stage = 'Closed Won' AND closed_date IS NOT NULL 
           THEN julianday(closed_date) - julianday(created_date)
         END
       ) as salesCycle

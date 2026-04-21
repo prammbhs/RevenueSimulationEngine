@@ -1,4 +1,4 @@
-/** Format a raw number as INR (Lakhs/Crores), e.g. 1700000 → "₹17L" */
+/** Format a raw number as INR (Lakhs/Crores) */
 export const formatINR = (value: number): string => {
   const abs = Math.abs(value);
   const sign = value < 0 ? '-' : '';

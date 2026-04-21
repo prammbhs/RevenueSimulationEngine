@@ -31,7 +31,7 @@ export const calculateBaselineQ3Performance = (): BaselineQ3Result => {
     // 3. Compute expected close date
     const cycleDays = advancedFactors.salesCycleByCategory[deal.price_category] ?? baseSalesCycle;
     
-    // Convert created_date to a UTC Date to prevent arbitrary timezone shifts
+    // Convert created_date to a UTC Date to prevent  timezone shifts
     const createdDateUTC = new Date(`${deal.created_date}T00:00:00Z`);
     
     // Add cycleDays
