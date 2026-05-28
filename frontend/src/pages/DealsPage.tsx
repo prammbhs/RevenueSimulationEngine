@@ -5,7 +5,7 @@ import DealsFilters    from '../components/deals/DealsFilters';
 import DealsTable      from '../components/deals/DealsTable';
 import DealsPagination from '../components/deals/DealsPagination';
 
-const BASE_URL = 'http://localhost:8000/api/v1';
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1';
 const PAGE_SIZE = 15;
 
 export default function DealsPage() {
